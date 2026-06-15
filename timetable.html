@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Timetable – SmartTimetable UUM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f2f5}
+.navbar{background:#1a2a4a;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:500;height:68px;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+.navbar-left{display:flex;align-items:center;gap:12px}
+.navbar-left img.logo{height:56px;width:56px;object-fit:contain}
+.brand-main{font-size:16px;font-weight:800;color:#efcb33}.brand-sub{font-size:10px;color:#8ab0d4}
+.navbar-center{display:flex;gap:2px}
+.navbar-center a{color:#c8dff0;text-decoration:none;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;transition:.15s;display:flex;align-items:center;gap:5px}
+.navbar-center a:hover{background:rgba(255,255,255,.1);color:#fff}
+.navbar-center a.active{background:#efcb33;color:#1a2a4a}
+.wl-badge{background:#efcb33;color:#1a2a4a;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px}
+.navbar-center a.active .wl-badge{background:#1a2a4a;color:#efcb33}
+.navbar-right{display:flex;align-items:center;gap:10px}
+.btn-logout-nav{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(229,57,53,.18);border:1.5px solid rgba(229,57,53,.4);color:#ff6b6b;font-size:16px;text-decoration:none;transition:.15s}
+.btn-logout-nav:hover{background:rgba(229,57,53,.35);color:#fff}
+.profile-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:24px;padding:5px 13px 5px 6px;font-size:13px;font-weight:700;color:#efcb33;text-decoration:none;transition:.15s}
+.profile-btn:hover{background:rgba(239,203,51,.15);border-color:#efcb33}
+.p-avatar{width:32px;height:32px;border-radius:50%;background:#efcb33;color:#1a2a4a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900}
+
+.wrap{max-width:1100px;margin:28px auto;padding:0 20px}
+.page-title{font-size:20px;font-weight:800;color:#1a2a4a;margin-bottom:18px}
+.layout{display:flex;gap:20px;align-items:flex-start}
+.tt-wrap{flex:1;background:white;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow-x:auto}
+.tt-table{width:100%;border-collapse:collapse;min-width:600px;font-size:12px}
+.tt-table th{background:#1a2a4a;color:white;padding:9px 6px;text-align:center;font-size:11px}
+.tt-table td{border:0.5px solid #eee;height:42px;text-align:center;vertical-align:middle;padding:2px}
+.tt-table .tc{font-size:10px;color:#666;padding:4px 8px;white-space:nowrap;text-align:right;background:#fafafa}
+.cell-inner{border-radius:4px;padding:3px 4px;line-height:1.4;font-size:10px}
+
+/* Actions sidebar */
+.actions{display:flex;flex-direction:column;gap:10px;min-width:150px}
+.btn-act{display:flex;align-items:center;gap:8px;padding:10px 18px;border:1.5px solid #1a2a4a;border-radius:24px;font-size:13px;font-weight:700;cursor:pointer;background:white;color:#1a2a4a;transition:.15s;white-space:nowrap}
+.btn-act:hover{background:#efcb33;border-color:#efcb33}
+
+/* Legend */
+.legend{margin-top:20px}
+.legend-title{font-size:12px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.legend-items{display:flex;flex-wrap:wrap;gap:8px}
+.leg-item{font-size:11px;padding:4px 12px;border-radius:20px}
+
+/* Empty */
+.empty{text-align:center;padding:60px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.empty-ico{font-size:40px;margin-bottom:12px}
+
+/* Share modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:white;border-radius:14px;padding:26px;width:420px;max-width:92vw}
+.modal h2{font-size:17px;font-weight:700;color:#1a2a4a;margin-bottom:18px}
+.modal label{font-size:12px;color:#888;font-weight:600;display:block;margin-bottom:8px}
+.share-link{display:flex;gap:8px;margin-bottom:20px}
+.share-link input{flex:1;padding:9px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:12px;background:#f5f5f5;color:#555}
+.btn-copy{padding:9px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:12px;cursor:pointer;background:white;font-family:'Segoe UI',sans-serif}
+.btn-copy:hover{background:#efcb33;border-color:#efcb33}
+.share-icons{display:flex;gap:20px;margin-bottom:22px}
+.sh-icon{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;color:#555;cursor:pointer;padding:8px;border-radius:8px;transition:.15s}
+.sh-icon:hover{background:#f5f5f5}
+.sh-icon span{font-size:28px}
+.btn-done{width:100%;padding:11px;border:1.5px solid #1a2a4a;border-radius:24px;font-size:14px;font-weight:700;cursor:pointer;background:white;font-family:'Segoe UI',sans-serif}
+.btn-done:hover{background:#efcb33;border-color:#efcb33}
+
+@media print{.navbar,.actions,.modal-bg{display:none!important}body{background:white}.wrap{margin:0;padding:0}.tt-wrap{border:none;padding:0}}
+footer{text-align:center;margin:32px 0 20px;color:#bbb;font-size:12px}
+</style>
+</head>
+<body data-page="timetable">
+
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="logo.png" alt="UUM" class="logo">
+    <div><div class="brand-main">SmartTimetable UUM</div><div class="brand-sub">UNIVERSITI UTARA MALAYSIA</div></div>
+  </div>
+  <div class="navbar-center">
+    <a href="home.html">Home</a>
+    <a href="course_list.html">Course List</a>
+    <a href="wishlist.html">Wishlist <span class="wl-badge" id="wl-count" style="display:none">0</span></a>
+    <a href="timetable.html" class="active">Timetable</a>
+  </div>
+  <div class="navbar-right">
+    <a href="index.html" class="btn-logout-nav" title="Log Out">🚪</a>
+    <a href="profile.html" class="profile-btn">
+      <div class="p-avatar" id="nav-avatar">U</div>
+      <span id="nav-name">Student</span> ▾
+    </a>
+  </div>
+</nav>
+
+<div class="wrap" id="main-wrap">
+  <div class="page-title">📅 Final Timetable</div>
+
+  <div id="view-empty" style="display:none">
+    <div class="empty">
+      <div class="empty-ico">📭</div>
+      <p style="font-size:16px;font-weight:700;color:#1a2a4a;margin-bottom:8px">No timetable generated yet</p>
+      <p style="font-size:13px;color:#aaa;margin-bottom:16px">Add courses to wishlist and generate a schedule first.</p>
+      <a href="wishlist.html" style="background:#efcb33;color:#1a1a1a;padding:10px 24px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none">Go to Wishlist →</a>
+    </div>
+  </div>
+
+  <div id="view-tt">
+    <div class="layout">
+      <div class="tt-wrap">
+        <table class="tt-table" id="tt-table">
+          <thead id="tt-head"></thead>
+          <tbody id="tt-body"></tbody>
+        </table>
+      </div>
+      <div class="actions">
+        <button class="btn-act" onclick="window.print()">⬇ Download</button>
+        <button class="btn-act" onclick="openShare()">↗ Share</button>
+        <a href="wishlist.html" class="btn-act" style="text-decoration:none">← Back</a>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="legend-title">Course Legend</div>
+      <div class="legend-items" id="legend-items"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Share modal -->
+<div class="modal-bg" id="share-modal">
+  <div class="modal">
+    <h2>Share Timetable</h2>
+    <label>Share Link</label>
+    <div class="share-link">
+      <input type="text" id="share-url" value="https://smarttimetable.uum.edu.my/s/demo123" readonly>
+      <button class="btn-copy" onclick="copyLink()">Copy Link</button>
+    </div>
+    <label>Share Via</label>
+    <div class="share-icons">
+      <div class="sh-icon" onclick="shareWA()"><span>💬</span>WhatsApp</div>
+      <div class="sh-icon" onclick="shareTG()"><span>✈️</span>Telegram</div>
+      <div class="sh-icon" onclick="shareEmail()"><span>📧</span>Email</div>
+      <div class="sh-icon"><span>⋯</span>Others</div>
+    </div>
+    <button class="btn-done" onclick="closeShare()">Done</button>
+  </div>
+</div>
+
+<footer>SmartTimetable UUM | Plan Smarter, Register Easier</footer>
+
+<script>
+const DAYS=['AHAD','ISNIN','SELASA','RABU','KHAMIS'];
+const DAY_LABEL={AHAD:'SUNDAY',ISNIN:'MONDAY',SELASA:'TUESDAY',RABU:'WEDNESDAY',KHAMIS:'THURSDAY'};
+const TIMESLOTS=['08:30','09:30','10:30','11:30','12:30','13:30','14:30','15:30'];
+const COLORS=[{bg:'#EEEDFE',tx:'#3C3489'},{bg:'#E1F5EE',tx:'#085041'},{bg:'#FAECE7',tx:'#712B13'},{bg:'#FBEAF0',tx:'#72243E'},{bg:'#FAEEDA',tx:'#633806'}];
+
+// Nav
+(function(){
+  const name=localStorage.getItem('st_name')||'Student';
+  const fn=name.split(' ')[0];
+  document.getElementById('nav-avatar').textContent=fn[0].toUpperCase();
+  document.getElementById('nav-name').textContent=fn;
+  const wl=JSON.parse(localStorage.getItem('wishlist')||'[]');
+  const b=document.getElementById('wl-count');
+  if(b&&wl.length>0){b.textContent=wl.length;b.style.display='inline';}
+})();
+
+// Render timetable
+const schedule=JSON.parse(localStorage.getItem('final_schedule_full')||'null');
+
+if(!schedule||!schedule.length){
+  document.getElementById('view-tt').style.display='none';
+  document.getElementById('view-empty').style.display='block';
+} else {
+  const colorMap={};
+  schedule.forEach((s,i)=>{if(!colorMap[s.code])colorMap[s.code]=COLORS[i%COLORS.length];});
+
+  // Header
+  document.getElementById('tt-head').innerHTML=`<tr><th>Time</th>${DAYS.map(d=>`<th>${DAY_LABEL[d]}</th>`).join('')}</tr>`;
+
+  // Body
+  let body='';
+  for(let i=0;i<TIMESLOTS.length-1;i++){
+    const ts=TIMESLOTS[i],te=TIMESLOTS[i+1];
+    body+=`<tr><td class="tc">${ts}–${te}</td>`;
+    for(const day of DAYS){
+      const s=schedule.find(x=>x.day===day&&x.start===ts);
+      if(s){
+        const col=colorMap[s.code];
+        body+=`<td><div class="cell-inner" style="background:${col.bg};color:${col.tx}">${s.code}<br>Grp ${s.label}<br>${s.venue}</div></td>`;
+      } else body+=`<td></td>`;
+    }
+    body+=`</tr>`;
+  }
+  document.getElementById('tt-body').innerHTML=body;
+
+  // Legend
+  document.getElementById('legend-items').innerHTML=schedule.map((s,i)=>{
+    const col=colorMap[s.code];
+    return `<span class="leg-item" style="background:${col.bg};color:${col.tx}">${s.code} – ${s.name} (Grp ${s.label}, ${s.venue})</span>`;
+  }).join('');
+}
+
+function openShare(){document.getElementById('share-modal').classList.add('open');}
+function closeShare(){document.getElementById('share-modal').classList.remove('open');}
+document.getElementById('share-modal').addEventListener('click',e=>{if(e.target===document.getElementById('share-modal'))closeShare();});
+function copyLink(){navigator.clipboard.writeText(document.getElementById('share-url').value);alert('Link copied!');}
+function shareWA(){window.open('https://wa.me/?text=Check+my+UUM+timetable:+'+encodeURIComponent(document.getElementById('share-url').value),'_blank');}
+function shareTG(){window.open('https://t.me/share/url?url='+encodeURIComponent(document.getElementById('share-url').value)+'&text=My+UUM+Timetable','_blank');}
+function shareEmail(){window.location='mailto:?subject=My UUM Timetable&body=View my timetable: '+document.getElementById('share-url').value;}
+</script>
+</body>
+</html>

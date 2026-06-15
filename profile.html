@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Profile – SmartTimetable UUM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f2f5}
+.navbar{background:#1a2a4a;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:500;height:68px;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+.navbar-left{display:flex;align-items:center;gap:12px}
+.navbar-left img.logo{height:56px;width:56px;object-fit:contain}
+.brand-main{font-size:16px;font-weight:800;color:#efcb33}.brand-sub{font-size:10px;color:#8ab0d4}
+.navbar-center{display:flex;gap:2px}
+.navbar-center a{color:#c8dff0;text-decoration:none;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;transition:.15s}
+.navbar-center a:hover{background:rgba(255,255,255,.1);color:#fff}
+.navbar-center a.active{background:#efcb33;color:#1a2a4a}
+.wl-badge{background:#efcb33;color:#1a2a4a;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px}
+.navbar-center a.active .wl-badge{background:#1a2a4a;color:#efcb33}
+.navbar-right{display:flex;align-items:center;gap:10px}
+.btn-logout-nav{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(229,57,53,.18);border:1.5px solid rgba(229,57,53,.4);color:#ff6b6b;font-size:16px;text-decoration:none;transition:.15s}
+.btn-logout-nav:hover{background:rgba(229,57,53,.35);color:#fff}
+.profile-btn{display:flex;align-items:center;gap:8px;background:rgba(239,203,51,.2);border:1.5px solid #efcb33;border-radius:24px;padding:5px 13px 5px 6px;font-size:13px;font-weight:700;color:#efcb33;text-decoration:none}
+.p-avatar{width:32px;height:32px;border-radius:50%;background:#efcb33;color:#1a2a4a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900}
+
+.wrap{max-width:900px;margin:28px auto;padding:0 20px 40px}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:#1a2a4a;text-decoration:none;font-size:13px;font-weight:700;margin-bottom:18px;padding:8px 16px;background:white;border-radius:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:.15s}
+.back-link:hover{background:#efcb33}
+
+/* Profile card */
+.profile-card{background:linear-gradient(135deg,#1a2a4a,#2c4a7c);border-radius:16px;padding:30px 36px;display:flex;align-items:center;gap:24px;margin-bottom:22px;color:white;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.avatar-lg{width:78px;height:78px;border-radius:50%;background:#efcb33;color:#1a2a4a;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;flex-shrink:0;box-shadow:0 0 0 4px rgba(239,203,51,.3)}
+.profile-card h2{font-size:1.3rem;font-weight:800;margin-bottom:4px}
+.profile-card p{font-size:13px;color:#8ab0d4}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+@media(max-width:600px){.info-grid{grid-template-columns:1fr}}
+.info-item{background:white;border-radius:12px;padding:16px 18px;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.info-item label{font-size:11px;font-weight:700;color:#8ab0d4;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px}
+.info-item span{font-size:15px;font-weight:600;color:#1a2a4a}
+.full-width{grid-column:1/-1}
+
+/* Section */
+.sec-title{font-size:13px;font-weight:800;color:#1a2a4a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px}
+.table-wrap{background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.07)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:#1a2a4a;color:white;padding:11px 15px;text-align:left;font-size:12px}
+tbody td{padding:11px 15px;border-bottom:1px solid #f0f0f0;color:#333}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#f8f9fb}
+.cat-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}
+.cat-uc{background:#eef2ff;color:#1e3a8a}
+.cat-el{background:#f0fdf4;color:#166534}
+.cat-pc{background:#fef2f2;color:#7f1d1d}
+.cat-pe{background:#fffbeb;color:#78350f}
+.cat-fe{background:#faf5ff;color:#581c87}
+
+footer{text-align:center;margin:32px 0 20px;color:#bbb;font-size:12px}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="logo.png" alt="UUM" class="logo">
+    <div><div class="brand-main">SmartTimetable UUM</div><div class="brand-sub">UNIVERSITI UTARA MALAYSIA</div></div>
+  </div>
+  <div class="navbar-center">
+    <a href="home.html">Home</a>
+    <a href="course_list.html">Course List</a>
+    <a href="wishlist.html">Wishlist <span class="wl-badge" id="wl-count" style="display:none">0</span></a>
+    <a href="timetable.html">Timetable</a>
+  </div>
+  <div class="navbar-right">
+    <a href="index.html" class="btn-logout-nav" title="Log Out">🚪</a>
+    <a href="profile.html" class="profile-btn">
+      <div class="p-avatar" id="nav-avatar">U</div>
+      <span id="nav-name">Student</span> ▾
+    </a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <a href="home.html" class="back-link">← Back to Home</a>
+
+  <!-- Profile header -->
+  <div class="profile-card">
+    <div class="avatar-lg" id="prof-avatar">U</div>
+    <div>
+      <h2 id="prof-name">Student Name</h2>
+      <p id="prof-prog">Programme</p>
+    </div>
+  </div>
+
+  <!-- Info grid -->
+  <div class="info-grid">
+    <div class="info-item">
+      <label>Full Name</label>
+      <span id="info-name">–</span>
+    </div>
+    <div class="info-item">
+      <label>Matric Number</label>
+      <span id="info-matric">–</span>
+    </div>
+    <div class="info-item">
+      <label>Email</label>
+      <span id="info-email">–</span>
+    </div>
+    <div class="info-item">
+      <label>Current Semester</label>
+      <span id="info-sem">–</span>
+    </div>
+    <div class="info-item full-width">
+      <label>Programme</label>
+      <span id="info-prog">–</span>
+    </div>
+  </div>
+
+  <!-- Proposed courses -->
+  <div class="sec-title">📋 Proposed Courses — BSc (Hons) Multimedia</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Course Code</th>
+          <th>Course Name</th>
+          <th style="text-align:center">Credit Hours</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody id="proposed-tbody">
+        <!-- Populated by JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>SmartTimetable UUM | Plan Smarter, Register Easier</footer>
+
+<script>
+// Proposed courses for BSc Multimedia (representative list)
+const PROPOSED = [
+  {code:'MPB1013',name:'Basic English Proficiency',cr:3,cat:'English Language Core'},
+  {code:'MPB2013',name:'English Language Enrichment I',cr:3,cat:'English Language Core'},
+  {code:'MPU1013',name:'Penghayatan Etika dan Peradaban',cr:3,cat:'University Core'},
+  {code:'MPU1022',name:'Penghayatan Etika dan Peradaban (M)',cr:3,cat:'University Core'},
+  {code:'MPU1032',name:'Basic Malay for Foreigner',cr:3,cat:'University Core'},
+  {code:'MPU1042',name:'Nationhood Studies',cr:3,cat:'University Core'},
+  {code:'SCCVK1013',name:'Programming Language and Authoring',cr:3,cat:'Programme Core'},
+  {code:'SCCVK1023',name:'Multimedia System Foundation',cr:3,cat:'Programme Core'},
+  {code:'SCCVK1033',name:'Visual Art Appreciation',cr:3,cat:'Programme Core'},
+  {code:'SCCVK1043',name:'Visual Design Principle',cr:3,cat:'Programme Core'},
+  {code:'SCCVK2013',name:'Human Computer Interaction',cr:3,cat:'Programme Core'},
+  {code:'SCCVK2023',name:'Graphic and Computer Animation',cr:3,cat:'Programme Core'},
+  {code:'SCCVK2043',name:'Digital Audio Technology',cr:3,cat:'Programme Core'},
+  {code:'SCCVK2053',name:'Multimedia Project Management',cr:3,cat:'Programme Core'},
+  {code:'SCCVK2063',name:'User Experience',cr:3,cat:'Programme Core'},
+  {code:'SCCVK2083',name:'2D Animation',cr:3,cat:'Programme Core'},
+  {code:'SCCVK3013',name:'WWW Programming',cr:3,cat:'Programme Core'},
+  {code:'SCCVK3023',name:'Multimedia System Networking',cr:3,cat:'Programme Core'},
+  {code:'SCCVK3033',name:'Multimedia Database',cr:3,cat:'Programme Core'},
+  {code:'SCCVK3043',name:'Technology Video Digital',cr:3,cat:'Programme Core'},
+  {code:'SCCVK3053',name:'Internet Technology Services',cr:3,cat:'Programme Core'},
+  {code:'SCCVK3073',name:'Multimedia Seminar',cr:3,cat:'Programme Core'},
+  {code:'SCCVK3093',name:'Game Application Development',cr:3,cat:'Programme Elective'},
+  {code:'SCCVK3123',name:'3D Animation',cr:3,cat:'Programme Elective'},
+  {code:'SCCVK3143',name:'Digital Reality',cr:3,cat:'Programme Elective'},
+  {code:'SBLEK3033',name:'Report Writing',cr:3,cat:'Programme Core'},
+  {code:'STDIK3033',name:'IT Entrepreneurship',cr:4,cat:'Programme Core'},
+  {code:'SALNK1113',name:'Introduction to Applied History',cr:3,cat:'Free Elective'},
+];
+
+const catClass={
+  'University Core':'cat-uc','English Language Core':'cat-el',
+  'Programme Core':'cat-pc','Programme Elective':'cat-pe','Free Elective':'cat-fe'
+};
+
+// Load student data
+(function(){
+  const name=localStorage.getItem('st_name')||'Student';
+  const matric=localStorage.getItem('st_matric')||'–';
+  const sem=localStorage.getItem('st_sem')||'–';
+  const username=localStorage.getItem('st_username')||'student';
+  const email=username+'@smmtc.uum.edu.my';
+  const prog=localStorage.getItem('st_prog')||'BSc (Hons) Multimedia';
+  const fn=name.split(' ')[0];
+
+  // Navbar
+  document.getElementById('nav-avatar').textContent=fn[0].toUpperCase();
+  document.getElementById('nav-name').textContent=fn;
+  const wl=JSON.parse(localStorage.getItem('wishlist')||'[]');
+  const b=document.getElementById('wl-count');
+  if(b&&wl.length>0){b.textContent=wl.length;b.style.display='inline';}
+
+  // Profile header
+  document.getElementById('prof-avatar').textContent=fn[0].toUpperCase();
+  document.getElementById('prof-name').textContent=name;
+  document.getElementById('prof-prog').textContent=prog;
+
+  // Info items
+  document.getElementById('info-name').textContent=name;
+  document.getElementById('info-matric').textContent=matric;
+  document.getElementById('info-email').textContent=email;
+  document.getElementById('info-sem').textContent='Semester '+sem;
+  document.getElementById('info-prog').textContent=prog;
+
+  // Proposed courses table
+  document.getElementById('proposed-tbody').innerHTML=PROPOSED.map((c,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${c.code}</strong></td>
+      <td>${c.name}</td>
+      <td style="text-align:center">${c.cr}</td>
+      <td><span class="cat-badge ${catClass[c.cat]||'cat-uc'}">${c.cat}</span></td>
+    </tr>`).join('');
+})();
+</script>
+</body>
+</html>

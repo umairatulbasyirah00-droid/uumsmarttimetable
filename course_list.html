@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Course List – SmartTimetable UUM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f2f5}
+.navbar{background:#1a2a4a;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:500;height:68px;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+.navbar-left{display:flex;align-items:center;gap:12px}
+.navbar-left img.logo{height:56px;width:56px;object-fit:contain}
+.brand-main{font-size:16px;font-weight:800;color:#efcb33}.brand-sub{font-size:10px;color:#8ab0d4}
+.navbar-center{display:flex;gap:2px}
+.navbar-center a{color:#c8dff0;text-decoration:none;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;transition:.15s;display:flex;align-items:center;gap:5px}
+.navbar-center a:hover{background:rgba(255,255,255,.1);color:#fff}
+.navbar-center a.active{background:#efcb33;color:#1a2a4a}
+.wl-badge{background:#efcb33;color:#1a2a4a;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px}
+.navbar-center a.active .wl-badge{background:#1a2a4a;color:#efcb33}
+.navbar-right{display:flex;align-items:center;gap:10px}
+.btn-logout-nav{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(229,57,53,.18);border:1.5px solid rgba(229,57,53,.4);color:#ff6b6b;font-size:16px;text-decoration:none;transition:.15s}
+.btn-logout-nav:hover{background:rgba(229,57,53,.35);color:#fff}
+.profile-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:24px;padding:5px 13px 5px 6px;font-size:13px;font-weight:700;color:#efcb33;text-decoration:none;transition:.15s}
+.profile-btn:hover{background:rgba(239,203,51,.15);border-color:#efcb33}
+.p-avatar{width:32px;height:32px;border-radius:50%;background:#efcb33;color:#1a2a4a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900}
+
+.wrap{max-width:1200px;margin:28px auto;padding:0 20px}
+.bc{font-size:13px;color:#888;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.bc a{color:#1a2a4a;text-decoration:none;font-weight:600}.bc a:hover{color:#efcb33}
+.pg-title{font-size:22px;font-weight:800;color:#1a2a4a;margin-bottom:4px}
+.pg-sub{font-size:13px;color:#999;margin-bottom:24px}
+
+/* College cards */
+.col-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px}
+@media(max-width:700px){.col-grid{grid-template-columns:1fr}}
+.col-card{background:white;border-radius:14px;border:2px solid transparent;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:26px 22px;cursor:pointer;transition:.2s;text-decoration:none;display:block}
+.col-card:hover{border-color:#efcb33;box-shadow:0 6px 24px rgba(239,203,51,.2);transform:translateY(-3px)}
+.col-icon{width:50px;height:50px;border-radius:12px;background:#efcb33;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+.col-code{font-size:11px;font-weight:800;color:#aaa;letter-spacing:1.5px;margin-bottom:4px}
+.col-name{font-size:15px;font-weight:700;color:#1a2a4a;line-height:1.3;margin-bottom:4px}
+.col-malay{font-size:12px;color:#bbb;line-height:1.4;margin-bottom:14px}
+.col-foot{display:flex;align-items:center;justify-content:space-between}
+.col-count{background:#f0f2f5;color:#666;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
+.col-arrow{background:#efcb33;color:#1a2a4a;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900}
+
+/* Course list view */
+.view-header{background:white;border-radius:12px;padding:18px 22px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.vh-tag{font-size:11px;font-weight:800;color:#efcb33;letter-spacing:1.5px;text-transform:uppercase}
+.vh-title{font-size:18px;font-weight:800;color:#1a2a4a;margin:4px 0 2px}
+.vh-sub{font-size:13px;color:#999}
+.btn-change{padding:8px 18px;border:1.5px solid #ddd;border-radius:20px;background:white;font-size:13px;font-weight:600;cursor:pointer;color:#1a2a4a;text-decoration:none;display:inline-block;transition:.15s}
+.btn-change:hover{border-color:#efcb33;background:#fffdf0}
+
+/* Toolbar */
+.toolbar{background:white;border-radius:12px;padding:14px 18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tb-search{display:flex;align-items:center;gap:8px;border:1.5px solid #eee;border-radius:8px;padding:8px 13px;flex:1;min-width:180px;background:#fafafa}
+.tb-search:focus-within{border-color:#efcb33;background:white}
+.tb-search input{border:none;background:transparent;outline:none;font-size:14px;color:#333;flex:1;font-family:'Segoe UI',sans-serif}
+.tb-sel{padding:9px 11px;border:1.5px solid #eee;border-radius:8px;font-size:13px;color:#333;background:#fafafa;font-family:'Segoe UI',sans-serif;cursor:pointer}
+.tb-sel:focus{outline:none;border-color:#efcb33}
+.btn-apply{padding:9px 18px;background:#efcb33;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;color:#1a1a1a}
+.btn-apply:hover{background:#d4b22c}
+.btn-reset{padding:9px 12px;background:#f5f5f5;border:1.5px solid #eee;border-radius:8px;font-size:13px;color:#666;cursor:pointer;text-decoration:none}
+.btn-reset:hover{background:#eee}
+
+/* Stats */
+.stats{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.chip{background:white;border-radius:20px;padding:5px 13px;font-size:12px;color:#555;font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.chip strong{color:#1a2a4a}
+.chip-green{background:#d4edda;color:#155724}
+
+/* Accordion */
+.c-block{background:white;border-radius:10px;margin-bottom:8px;box-shadow:0 1px 6px rgba(0,0,0,.06);overflow:hidden}
+.c-block.is-added{border-left:3px solid #28a745}
+.c-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;border:none;background:white;width:100%;text-align:left;font-family:'Segoe UI',sans-serif;transition:.15s;gap:12px}
+.c-head:hover{background:#fafafa}
+.c-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.c-code{font-size:14px;font-weight:800;color:#1a2a4a;min-width:95px;flex-shrink:0}
+.c-name{font-size:13px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-cr{background:#f0f2f5;color:#555;font-size:11px;padding:3px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.c-gcount{font-size:11px;color:#aaa;white-space:nowrap;flex-shrink:0}
+.c-added-tag{background:#d4edda;color:#155724;font-size:11px;padding:3px 10px;border-radius:10px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.c-arr{color:#bbb;font-size:13px;transition:.25s;flex-shrink:0}
+.c-arr.open{transform:rotate(180deg);color:#efcb33}
+.g-wrap{display:none;border-top:1px solid #f0f0f0}
+.g-wrap.open{display:block}
+table.g-table{width:100%;border-collapse:collapse;font-size:13px}
+table.g-table thead th{background:#1a2a4a;color:white;padding:10px 14px;text-align:left;font-size:12px;font-weight:700}
+table.g-table tbody td{padding:11px 14px;border-bottom:1px solid #f5f5f5;color:#333}
+table.g-table tbody tr:last-child td{border-bottom:none}
+table.g-table tbody tr:hover{background:#fafafa}
+.grp-lbl{font-weight:800;color:#1a2a4a;font-size:14px}
+.day-b{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700}
+.d-ahad{background:#fff3e0;color:#e65100}.d-isnin{background:#e3f2fd;color:#1565c0}
+.d-selasa{background:#f3e5f5;color:#6a1b9a}.d-rabu{background:#e8f5e9;color:#2e7d32}
+.d-khamis{background:#fce4ec;color:#880e4f}.d-other{background:#f5f5f5;color:#555}
+.venue-t{font-size:12px;color:#888}
+.btn-add-r{padding:6px 14px;background:#28a745;color:white;border:none;border-radius:16px;font-size:12px;font-weight:700;cursor:pointer;transition:.15s}
+.btn-add-r:hover{background:#218838}
+.btn-done-r{padding:6px 14px;background:#6c757d;color:white;border:none;border-radius:16px;font-size:12px;font-weight:700;cursor:default}
+.empty{text-align:center;padding:60px 20px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.empty-ico{font-size:48px;margin-bottom:12px}
+.empty-t{font-size:16px;font-weight:700;color:#1a2a4a;margin-bottom:6px}
+.empty-s{font-size:13px;color:#aaa}
+footer{text-align:center;margin:32px 0 20px;color:#bbb;font-size:12px}
+</style>
+</head>
+<body data-page="course_list">
+
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="logo.png" alt="UUM" class="logo">
+    <div><div class="brand-main">SmartTimetable UUM</div><div class="brand-sub">UNIVERSITI UTARA MALAYSIA</div></div>
+  </div>
+  <div class="navbar-center">
+    <a href="home.html">Home</a>
+    <a href="course_list.html" class="active">Course List</a>
+    <a href="wishlist.html">Wishlist <span class="wl-badge" id="wl-count" style="display:none">0</span></a>
+    <a href="timetable.html">Timetable</a>
+  </div>
+  <div class="navbar-right">
+    <a href="index.html" class="btn-logout-nav" title="Log Out">🚪</a>
+    <a href="profile.html" class="profile-btn">
+      <div class="p-avatar" id="nav-avatar">U</div>
+      <span id="nav-name">Student</span> ▾
+    </a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="bc"><a href="home.html">Home</a> <span>›</span> <span id="bc-course">Course List</span></div>
+
+  <!-- LANDING -->
+  <div id="view-landing">
+    <div class="pg-title">📚 Course List</div>
+    <div class="pg-sub">Select a college to browse available courses for this semester.</div>
+    <div class="col-grid">
+      <a class="col-card" onclick="selectCollege('COB')" href="#">
+        <div class="col-icon">💼</div>
+        <div class="col-code">COB</div>
+        <div class="col-name">College of Business</div>
+        <div class="col-malay">Kolej Perniagaan</div>
+        <div class="col-foot"><span class="col-count" id="cnt-COB">— courses</span><span class="col-arrow">›</span></div>
+      </a>
+      <a class="col-card" onclick="selectCollege('CAS')" href="#">
+        <div class="col-icon">🔬</div>
+        <div class="col-code">CAS</div>
+        <div class="col-name">College of Arts and Science</div>
+        <div class="col-malay">Kolej Sastera Dan Sains</div>
+        <div class="col-foot"><span class="col-count" id="cnt-CAS">— courses</span><span class="col-arrow">›</span></div>
+      </a>
+      <a class="col-card" onclick="selectCollege('COLGIS')" href="#">
+        <div class="col-icon">⚖️</div>
+        <div class="col-code">COLGIS</div>
+        <div class="col-name">College of Law, Government &amp; International Studies</div>
+        <div class="col-malay">Kolej Undang-Undang, Kerajaan &amp; Pengajian Antarabangsa</div>
+        <div class="col-foot"><span class="col-count" id="cnt-COLGIS">— courses</span><span class="col-arrow">›</span></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- COURSE LIST VIEW -->
+  <div id="view-courses" style="display:none">
+    <div class="view-header">
+      <div>
+        <div class="vh-tag" id="vh-tag">CAS</div>
+        <div class="vh-title" id="vh-title">College of Arts and Science</div>
+        <div class="vh-sub" id="vh-sub">First Semester 2026/2027</div>
+      </div>
+      <a href="#" class="btn-change" onclick="backToColleges()">← Change College</a>
+    </div>
+
+    <div class="toolbar">
+      <div class="tb-search">
+        <span style="color:#aaa">🔍</span>
+        <input type="text" id="search-input" placeholder="Search course code or name..." oninput="filterCourses()">
+      </div>
+      <select class="tb-sel" id="f-day" onchange="filterCourses()">
+        <option value="">All Days</option>
+        <option value="AHAD">Ahad</option>
+        <option value="ISNIN">Isnin</option>
+        <option value="SELASA">Selasa</option>
+        <option value="RABU">Rabu</option>
+        <option value="KHAMIS">Khamis</option>
+      </select>
+      <select class="tb-sel" id="f-time" onchange="filterCourses()">
+        <option value="">All Times</option>
+        <option value="pagi">Morning (before 12pm)</option>
+        <option value="petang">Afternoon (12–5pm)</option>
+        <option value="malam">Evening (after 5pm)</option>
+      </select>
+      <select class="tb-sel" id="f-credit" onchange="filterCourses()">
+        <option value="">All Credits</option>
+        <option value="2">2 Credits</option>
+        <option value="3">3 Credits</option>
+        <option value="4">4 Credits</option>
+      </select>
+      <button class="btn-apply" onclick="filterCourses()">Apply</button>
+      <a href="#" class="btn-reset" onclick="resetFilters()">Reset</a>
+    </div>
+
+    <div class="stats">
+      <div class="chip"><strong id="stat-courses">0</strong> courses found</div>
+      <div class="chip"><strong id="stat-groups">0</strong> groups total</div>
+      <div class="chip chip-green" id="stat-added" style="display:none"><strong id="stat-added-n">0</strong> in wishlist</div>
+    </div>
+
+    <div id="course-list-wrap"></div>
+  </div>
+</div>
+
+<footer>SmartTimetable UUM | Plan Smarter, Register Easier</footer>
+
+<script>
+// ── Sample course data (replace with PHP output or fetch from API) ──
+const COURSES = {
+  CAS: [
+    { code:'SCCVK1013', name:'Programming Language and Authoring', credits:3, groups:[
+      {label:'A',day:'ISNIN',start:'08:30',end:'10:30',venue:'BTA 16'},
+      {label:'B',day:'SELASA',start:'10:30',end:'12:30',venue:'DKG 4/4'}]},
+    { code:'SCCVK2083', name:'2D Animation', credits:3, groups:[
+      {label:'A',day:'RABU',start:'08:30',end:'10:30',venue:'DKG 23/6'},
+      {label:'B',day:'KHAMIS',start:'14:30',end:'16:30',venue:'BTA 5'}]},
+    { code:'SCCVK3033', name:'Multimedia Database', credits:3, groups:[
+      {label:'A',day:'ISNIN',start:'10:30',end:'12:30',venue:'DKG 18/2'},
+      {label:'B',day:'RABU',start:'08:30',end:'10:30',venue:'BTA 5'}]},
+    { code:'SCCVK3053', name:'Internet Technology Services', credits:3, groups:[
+      {label:'A',day:'ISNIN',start:'12:30',end:'14:30',venue:'DKG 28/6'},
+      {label:'B',day:'KHAMIS',start:'08:30',end:'10:30',venue:'BTA 3'}]},
+    { code:'SBLEK3033', name:'Report Writing', credits:3, groups:[
+      {label:'A',day:'AHAD',start:'09:30',end:'11:30',venue:'DKG 23/6'},
+      {label:'B',day:'ISNIN',start:'14:30',end:'16:30',venue:'DKG 12/3'}]},
+    { code:'STDIK3033', name:'IT Entrepreneurship', credits:4, groups:[
+      {label:'A',day:'RABU',start:'10:30',end:'12:30',venue:'BTA 7'},
+      {label:'B',day:'AHAD',start:'14:30',end:'16:30',venue:'DKG 28/6'}]},
+    { code:'MPB2013', name:'English Language Enrichment I', credits:3, groups:[
+      {label:'A',day:'ISNIN',start:'08:30',end:'10:30',venue:'BTA 18'},
+      {label:'B',day:'SELASA',start:'10:30',end:'12:30',venue:'BTA 22'}]},
+    { code:'MPU1013', name:'Penghayatan Etika dan Peradaban', credits:3, groups:[
+      {label:'A',day:'RABU',start:'14:30',end:'16:30',venue:'DKG 7/1'}]},
+  ],
+  COB: [
+    { code:'EEBK1013', name:'Principles of Economics', credits:3, groups:[
+      {label:'A',day:'ISNIN',start:'08:30',end:'10:30',venue:'DKG 2/6'},
+      {label:'B',day:'SELASA',start:'10:30',end:'12:30',venue:'DKG 3/2'}]},
+    { code:'EEBK2013', name:'Microeconomics', credits:3, groups:[
+      {label:'A',day:'RABU',start:'11:30',end:'13:30',venue:'FE14'}]},
+  ],
+  COLGIS: [
+    { code:'GFMAK2023', name:'International Business', credits:3, groups:[
+      {label:'A',day:'ISNIN',start:'10:00',end:'11:30',venue:'SOIS BK7'},
+      {label:'B',day:'SELASA',start:'10:00',end:'11:30',venue:'SOIS BK4'}]},
+    { code:'GFMAK3033', name:'International Management', credits:3, groups:[
+      {label:'A',day:'KHAMIS',start:'11:30',end:'13:00',venue:'SOIS BK6'}]},
+  ]
+};
+
+const COLLEGE_NAMES = {
+  COB:'College of Business', CAS:'College of Arts and Science',
+  COLGIS:'College of Law, Government & International Studies'
+};
+
+let currentCollege = '';
+let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+// Init nav
+(function(){
+  const name = localStorage.getItem('st_name') || 'Student';
+  const firstName = name.split(' ')[0];
+  document.getElementById('nav-avatar').textContent = firstName[0].toUpperCase();
+  document.getElementById('nav-name').textContent = firstName;
+  updateWlBadge();
+  // Show college counts
+  Object.keys(COURSES).forEach(c => {
+    const el = document.getElementById('cnt-'+c);
+    if (el) el.textContent = COURSES[c].length + ' courses';
+  });
+})();
+
+function updateWlBadge(){
+  wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  const b = document.getElementById('wl-count');
+  if (b) { b.textContent = wishlist.length; b.style.display = wishlist.length > 0 ? 'inline' : 'none'; }
+}
+
+function selectCollege(code) {
+  currentCollege = code;
+  document.getElementById('view-landing').style.display = 'none';
+  document.getElementById('view-courses').style.display = 'block';
+  document.getElementById('vh-tag').textContent = code;
+  document.getElementById('vh-title').textContent = COLLEGE_NAMES[code];
+  document.getElementById('bc-course').textContent = COLLEGE_NAMES[code];
+  filterCourses();
+  return false;
+}
+
+function backToColleges(){
+  document.getElementById('view-landing').style.display = 'block';
+  document.getElementById('view-courses').style.display = 'none';
+  document.getElementById('bc-course').textContent = 'Course List';
+  currentCollege = '';
+  return false;
+}
+
+function resetFilters(){
+  document.getElementById('search-input').value = '';
+  document.getElementById('f-day').value = '';
+  document.getElementById('f-time').value = '';
+  document.getElementById('f-credit').value = '';
+  filterCourses();
+  return false;
+}
+
+function filterCourses(){
+  wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const fDay = document.getElementById('f-day').value;
+  const fTime = document.getElementById('f-time').value;
+  const fCr = document.getElementById('f-credit').value;
+
+  let courses = (COURSES[currentCollege] || []).filter(c => {
+    if (q && !c.code.toLowerCase().includes(q) && !c.name.toLowerCase().includes(q)) return false;
+    if (fCr && c.credits != fCr) return false;
+    if (fDay && !c.groups.some(g => g.day === fDay)) return false;
+    if (fTime) {
+      const hasTime = c.groups.some(g => {
+        const h = parseInt(g.start.split(':')[0]);
+        if (fTime==='pagi') return h < 12;
+        if (fTime==='petang') return h >= 12 && h < 17;
+        return h >= 17;
+      });
+      if (!hasTime) return false;
+    }
+    return true;
+  });
+
+  const totalGroups = courses.reduce((s,c) => s+c.groups.length, 0);
+  const addedCount = courses.filter(c => wishlist.includes(c.code)).length;
+  document.getElementById('stat-courses').textContent = courses.length;
+  document.getElementById('stat-groups').textContent = totalGroups;
+  const addedEl = document.getElementById('stat-added');
+  if (addedCount > 0) { addedEl.style.display='inline'; document.getElementById('stat-added-n').textContent = addedCount; }
+  else addedEl.style.display='none';
+
+  const wrap = document.getElementById('course-list-wrap');
+  if (!courses.length) {
+    wrap.innerHTML = `<div class="empty"><div class="empty-ico">🔎</div><div class="empty-t">No courses found</div><div class="empty-s">Try adjusting filters.</div></div>`;
+    return;
+  }
+
+  wrap.innerHTML = courses.map(c => {
+    const inWl = wishlist.includes(c.code);
+    const dayClass = {AHAD:'d-ahad',ISNIN:'d-isnin',SELASA:'d-selasa',RABU:'d-rabu',KHAMIS:'d-khamis'};
+    const dayLabel = {AHAD:'Ahad',ISNIN:'Isnin',SELASA:'Selasa',RABU:'Rabu',KHAMIS:'Khamis'};
+    return `
+    <div class="c-block${inWl?' is-added':''}" id="block-${c.code}">
+      <button class="c-head" onclick="toggleCourse('${c.code}')">
+        <div class="c-left">
+          <span class="c-code">${c.code}</span>
+          <span class="c-name">${c.name}</span>
+        </div>
+        <span class="c-cr">${c.credits} cr</span>
+        <span class="c-gcount">${c.groups.length} grp${c.groups.length!==1?'s':''}</span>
+        ${inWl?'<span class="c-added-tag">✓ Wishlist</span>':''}
+        <span class="c-arr" id="arr-${c.code}">▼</span>
+      </button>
+      <div class="g-wrap" id="g-${c.code}">
+        <table class="g-table">
+          <thead><tr><th>Group</th><th>Day</th><th>Time</th><th>Venue</th><th style="text-align:center">Add to Wishlist</th></tr></thead>
+          <tbody>
+          ${c.groups.map(g => `
+            <tr>
+              <td><span class="grp-lbl">${g.label}</span></td>
+              <td><span class="day-b ${dayClass[g.day]||'d-other'}">${dayLabel[g.day]||g.day}</span></td>
+              <td>${g.start} – ${g.end}</td>
+              <td><span class="venue-t">📍 ${g.venue}</span></td>
+              <td style="text-align:center">
+                ${inWl
+                  ? `<button class="btn-done-r" disabled>✓ Added</button>`
+                  : `<button class="btn-add-r" onclick="addToWishlist('${c.code}')">+ Add</button>`}
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+
+  if (courses.length === 1) toggleCourse(courses[0].code);
+}
+
+function toggleCourse(code){
+  document.getElementById('g-'+code).classList.toggle('open');
+  document.getElementById('arr-'+code).classList.toggle('open');
+}
+
+function addToWishlist(code){
+  wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  if (!wishlist.includes(code)) { wishlist.push(code); localStorage.setItem('wishlist', JSON.stringify(wishlist)); }
+  filterCourses();
+  updateWlBadge();
+}
+</script>
+</body>
+</html>

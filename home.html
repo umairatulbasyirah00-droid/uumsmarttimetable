@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Home – SmartTimetable UUM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f2f5}
+
+/* ── Navbar ── */
+.navbar{background:#1a2a4a;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:500;height:68px;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+.navbar-left{display:flex;align-items:center;gap:12px}
+.navbar-left img.logo{height:56px;width:56px;object-fit:contain}
+.brand-wrap{line-height:1.25}
+.brand-main{font-size:16px;font-weight:800;color:#efcb33}
+.brand-sub{font-size:10px;font-weight:500;color:#8ab0d4;letter-spacing:.5px}
+.navbar-center{display:flex;gap:2px}
+.navbar-center a{color:#c8dff0;text-decoration:none;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;transition:.15s;display:flex;align-items:center;gap:5px}
+.navbar-center a:hover{background:rgba(255,255,255,.1);color:#fff}
+.navbar-center a.active{background:#efcb33;color:#1a2a4a}
+.wl-badge{background:#efcb33;color:#1a2a4a;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px}
+.navbar-center a.active .wl-badge{background:#1a2a4a;color:#efcb33}
+.navbar-right{display:flex;align-items:center;gap:10px}
+.btn-logout-nav{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(229,57,53,.18);border:1.5px solid rgba(229,57,53,.4);color:#ff6b6b;font-size:16px;text-decoration:none;transition:.15s}
+.btn-logout-nav:hover{background:rgba(229,57,53,.35);border-color:#e53935;color:#fff}
+.profile-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:24px;padding:5px 13px 5px 6px;cursor:pointer;font-size:13px;font-weight:700;color:#efcb33;text-decoration:none;transition:.15s}
+.profile-btn:hover{background:rgba(239,203,51,.15);border-color:#efcb33}
+.p-avatar{width:32px;height:32px;border-radius:50%;background:#efcb33;color:#1a2a4a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(135deg,#1a2a4a 0%,#2c4a7c 100%);color:white;padding:44px 28px 36px;text-align:center}
+.hero-sub{font-size:11px;font-weight:700;color:#efcb33;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.hero h1{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;margin-bottom:28px}
+.prog-wrap{max-width:480px;margin:0 auto}
+.prog-labels{display:flex;justify-content:space-between;font-size:12px;color:#8ab0d4;margin-bottom:8px}
+.prog-labels strong{color:#fff}
+.prog-track{height:12px;background:rgba(255,255,255,.15);border-radius:12px;overflow:hidden}
+.prog-fill{height:100%;border-radius:12px;background:linear-gradient(90deg,#efcb33,#f5d76e);transition:width .7s ease}
+.prog-pct{font-size:13px;font-weight:800;color:#efcb33;margin-top:8px;display:block}
+
+/* ── Page ── */
+.wrap{max-width:1150px;margin:30px auto;padding:0 20px}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:30px}
+.act-card{background:white;border-radius:14px;padding:24px 20px;box-shadow:0 1px 8px rgba(0,0,0,.07);text-decoration:none;color:inherit;display:block;border-top:4px solid #efcb33;transition:transform .15s,box-shadow .15s}
+.act-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.11)}
+.act-icon{font-size:2.2rem;margin-bottom:12px;display:block}
+.act-card h3{font-size:.95rem;font-weight:700;color:#1a2a4a;margin-bottom:5px}
+.act-card p{font-size:.82rem;color:#999;line-height:1.6;margin-bottom:12px}
+.act-badge{display:inline-block;background:#efcb33;color:#1a1a1a;font-size:11px;font-weight:700;padding:4px 12px;border-radius:10px}
+.sec-title{font-size:13px;font-weight:800;color:#1a2a4a;margin-bottom:14px;text-transform:uppercase;letter-spacing:.6px}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:28px}
+.cat-card{border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 6px rgba(0,0,0,.06);text-decoration:none;transition:transform .12s}
+.cat-card:hover{transform:translateY(-2px)}
+.cat-icon{font-size:1.6rem}
+.cat-info h4{font-size:12px;font-weight:700;margin-bottom:2px}
+.cat-info p{font-size:11px;opacity:.7}
+.cat-count{margin-left:auto;font-size:20px;font-weight:800;background:rgba(0,0,0,.08);padding:4px 10px;border-radius:8px}
+footer{text-align:center;margin:32px 0 20px;color:#bbb;font-size:12px}
+</style>
+</head>
+<body data-page="home">
+
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="logo.png" alt="UUM Logo" class="logo">
+    <div class="brand-wrap">
+      <div class="brand-main">SmartTimetable UUM</div>
+      <div class="brand-sub">UNIVERSITI UTARA MALAYSIA</div>
+    </div>
+  </div>
+  <div class="navbar-center">
+    <a href="home.html" class="active">Home</a>
+    <a href="course_list.html">Course List</a>
+    <a href="wishlist.html">Wishlist <span class="wl-badge" id="wl-count" style="display:none">0</span></a>
+    <a href="timetable.html">Timetable</a>
+  </div>
+  <div class="navbar-right">
+    <a href="index.html" class="btn-logout-nav" title="Log Out">🚪</a>
+    <a href="profile.html" class="profile-btn">
+      <div class="p-avatar" id="nav-avatar">U</div>
+      <span id="nav-name">Student</span> ▾
+    </a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-sub">Welcome Back</div>
+  <h1 id="hero-name">Student</h1>
+  <div class="prog-wrap">
+    <div class="prog-labels">
+      <strong>Programme Progress</strong>
+      <span id="prog-text">0 / 122 credit hours (0%)</span>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <span class="prog-pct" id="prog-pct">0% completed</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Quick actions -->
+  <div class="actions">
+    <a href="course_list.html" class="act-card">
+      <span class="act-icon">📚</span>
+      <h3>Course List</h3>
+      <p>Browse courses by college — COB, CAS, or COLGIS</p>
+      <span class="act-badge">Browse Courses</span>
+    </a>
+    <a href="wishlist.html" class="act-card">
+      <span class="act-icon">❤️</span>
+      <h3>My Wishlist</h3>
+      <p>Courses you've picked. Generate timetable when ready.</p>
+      <span class="act-badge" id="wl-act-badge">0 courses</span>
+    </a>
+    <a href="timetable.html" class="act-card">
+      <span class="act-icon">🗓️</span>
+      <h3>My Timetable</h3>
+      <p>View, download, or share your conflict-free schedule.</p>
+      <span class="act-badge" id="tt-act-badge">Not generated</span>
+    </a>
+  </div>
+
+  <!-- Programme structure -->
+  <div class="sec-title">📋 Programme Structure — Remaining Courses</div>
+  <div class="cat-grid">
+    <a href="course_list.html?category=university" class="cat-card" style="background:#eef2ff;color:#1e3a8a">
+      <span class="cat-icon">🏛️</span>
+      <div class="cat-info"><h4>University Core</h4><p>courses remaining</p></div>
+      <span class="cat-count" style="color:#1e3a8a">9</span>
+    </a>
+    <a href="course_list.html?category=english" class="cat-card" style="background:#f0fdf4;color:#166534">
+      <span class="cat-icon">🗣️</span>
+      <div class="cat-info"><h4>English Language Core</h4><p>courses remaining</p></div>
+      <span class="cat-count" style="color:#166534">6</span>
+    </a>
+    <a href="course_list.html?category=core" class="cat-card" style="background:#fef2f2;color:#7f1d1d">
+      <span class="cat-icon">📘</span>
+      <div class="cat-info"><h4>Programme Core</h4><p>courses remaining</p></div>
+      <span class="cat-count" style="color:#7f1d1d">30</span>
+    </a>
+    <a href="course_list.html?category=elective" class="cat-card" style="background:#fffbeb;color:#78350f">
+      <span class="cat-icon">⭐</span>
+      <div class="cat-info"><h4>Programme Elective</h4><p>courses remaining</p></div>
+      <span class="cat-count" style="color:#78350f">3</span>
+    </a>
+    <a href="course_list.html?category=free" class="cat-card" style="background:#faf5ff;color:#581c87">
+      <span class="cat-icon">🎯</span>
+      <div class="cat-info"><h4>Free Elective</h4><p>courses remaining</p></div>
+      <span class="cat-count" style="color:#581c87">1</span>
+    </a>
+  </div>
+
+</div>
+
+<footer>SmartTimetable UUM | Plan Smarter, Register Easier</footer>
+
+<script>
+// Load from localStorage (set after login)
+const name = localStorage.getItem('st_name') || 'Student';
+const matric = localStorage.getItem('st_matric') || '';
+const wl = JSON.parse(localStorage.getItem('wishlist') || '[]');
+const completedCredits = parseInt(localStorage.getItem('credits_done') || '0');
+const totalCredits = 122;
+const pct = Math.round(completedCredits / totalCredits * 100);
+
+// Hero
+document.getElementById('hero-name').textContent = name;
+
+// Progress bar
+document.getElementById('prog-fill').style.width = pct + '%';
+document.getElementById('prog-text').textContent = `${completedCredits} / ${totalCredits} credit hours (${pct}%)`;
+document.getElementById('prog-pct').textContent = `${pct}% completed`;
+
+// Avatar & nav name
+const firstName = name.split(' ')[0];
+document.getElementById('nav-avatar').textContent = firstName[0].toUpperCase();
+document.getElementById('nav-name').textContent = firstName;
+
+// Wishlist badge
+const badge = document.getElementById('wl-count');
+if (wl.length > 0) { badge.textContent = wl.length; badge.style.display = 'inline'; }
+document.getElementById('wl-act-badge').textContent = wl.length + ' course' + (wl.length !== 1 ? 's' : '');
+
+// Timetable badge
+const tt = localStorage.getItem('final_schedule');
+if (tt) document.getElementById('tt-act-badge').textContent = 'View now';
+</script>
+</body>
+</html>

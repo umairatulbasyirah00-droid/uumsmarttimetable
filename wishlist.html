@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wishlist – SmartTimetable UUM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f2f5}
+.navbar{background:#1a2a4a;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:500;height:68px;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+.navbar-left{display:flex;align-items:center;gap:12px}
+.navbar-left img.logo{height:56px;width:56px;object-fit:contain}
+.brand-main{font-size:16px;font-weight:800;color:#efcb33}.brand-sub{font-size:10px;color:#8ab0d4}
+.navbar-center{display:flex;gap:2px}
+.navbar-center a{color:#c8dff0;text-decoration:none;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;transition:.15s;display:flex;align-items:center;gap:5px}
+.navbar-center a:hover{background:rgba(255,255,255,.1);color:#fff}
+.navbar-center a.active{background:#efcb33;color:#1a2a4a}
+.wl-badge{background:#efcb33;color:#1a2a4a;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px}
+.navbar-center a.active .wl-badge{background:#1a2a4a;color:#efcb33}
+.navbar-right{display:flex;align-items:center;gap:10px}
+.btn-logout-nav{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(229,57,53,.18);border:1.5px solid rgba(229,57,53,.4);color:#ff6b6b;font-size:16px;text-decoration:none;transition:.15s}
+.btn-logout-nav:hover{background:rgba(229,57,53,.35);color:#fff}
+.profile-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:24px;padding:5px 13px 5px 6px;font-size:13px;font-weight:700;color:#efcb33;text-decoration:none;transition:.15s}
+.profile-btn:hover{background:rgba(239,203,51,.15);border-color:#efcb33}
+.p-avatar{width:32px;height:32px;border-radius:50%;background:#efcb33;color:#1a2a4a;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900}
+
+.wrap{max-width:920px;margin:30px auto;padding:0 20px}
+.card{background:white;border-radius:12px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:20px}
+h2{font-size:20px;font-weight:800;color:#1a2a4a;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+th{background:#1a2a4a;color:white;padding:11px 14px;text-align:left;font-size:13px}
+td{padding:12px 14px;font-size:13px;border-bottom:1px solid #eee;color:#333}
+tr:last-child td{border-bottom:none}
+.total-row td{background:#f9f9f9;font-weight:700}
+.btn-del{background:none;border:none;cursor:pointer;color:#aaa;font-size:18px;padding:2px 6px}
+.btn-del:hover{color:#e53935}
+.btn-generate{display:block;margin:24px auto 0;background:#efcb33;color:#1a1a1a;border:none;padding:13px 44px;border-radius:30px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.5px;transition:.15s}
+.btn-generate:hover{background:#d4b22c;transform:translateY(-1px)}
+.empty{text-align:center;padding:50px;color:#888}
+.empty-ico{font-size:40px;margin-bottom:12px}
+
+/* Clash error */
+.clash-banner{background:#e53935;color:white;padding:16px 22px;border-radius:8px;font-weight:800;font-size:15px;text-align:center;margin-bottom:16px}
+.clash-box{background:white;border:2px solid #e53935;border-radius:8px;padding:22px;margin-bottom:20px}
+.clash-item{color:#c62828;font-weight:600;font-size:13px;margin:6px 0}
+.btn-row{display:flex;gap:12px;margin-top:16px}
+.btn-outline{padding:9px 20px;border:1px solid #bbb;border-radius:8px;background:white;font-size:13px;cursor:pointer;color:#333;text-decoration:none}
+.btn-outline:hover{background:#f5f5f5}
+
+/* Preview */
+.preview-title{font-size:18px;font-weight:800;color:#1a2a4a;margin-bottom:18px}
+.schedules-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+@media(max-width:700px){.schedules-grid{grid-template-columns:1fr}}
+.sch-card{background:white;border-radius:10px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.sch-label{font-size:13px;font-weight:700;margin-bottom:12px;color:#444}
+.mini-tt{width:100%;border-collapse:collapse;font-size:9px}
+.mini-tt th{background:#1a2a4a;color:white;padding:4px 2px;text-align:center;font-size:8px}
+.mini-tt td{border:0.5px solid #eee;height:24px;text-align:center;vertical-align:middle;font-size:8px}
+.mini-tt .tc{font-size:7px;color:#888;padding:2px 4px;white-space:nowrap;background:#f8f8f8}
+.cell-inner{border-radius:3px;padding:2px;line-height:1.3;font-size:8px}
+.btn-select{display:block;margin:12px auto 0;background:#1a2a4a;color:white;border:none;padding:8px 26px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.5px}
+.btn-select:hover{background:#efcb33;color:#1a2a4a}
+
+footer{text-align:center;margin:32px 0 20px;color:#bbb;font-size:12px}
+</style>
+</head>
+<body data-page="wishlist">
+
+<nav class="navbar">
+  <div class="navbar-left">
+    <img src="logo.png" alt="UUM" class="logo">
+    <div><div class="brand-main">SmartTimetable UUM</div><div class="brand-sub">UNIVERSITI UTARA MALAYSIA</div></div>
+  </div>
+  <div class="navbar-center">
+    <a href="home.html">Home</a>
+    <a href="course_list.html">Course List</a>
+    <a href="wishlist.html" class="active">Wishlist <span class="wl-badge" id="wl-count" style="display:none">0</span></a>
+    <a href="timetable.html">Timetable</a>
+  </div>
+  <div class="navbar-right">
+    <a href="index.html" class="btn-logout-nav" title="Log Out">🚪</a>
+    <a href="profile.html" class="profile-btn">
+      <div class="p-avatar" id="nav-avatar">U</div>
+      <span id="nav-name">Student</span> ▾
+    </a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <!-- WISHLIST TABLE -->
+  <div id="view-wishlist">
+    <div class="card">
+      <h2>📋 My Wishlist</h2>
+      <div id="wl-content"></div>
+    </div>
+  </div>
+
+  <!-- CLASH ERROR -->
+  <div id="view-clash" style="display:none">
+    <div class="clash-banner">⚠ CLASH ERROR : TIMETABLE COULD NOT BE GENERATED</div>
+    <div class="clash-box">
+      <p style="font-size:14px;margin-bottom:12px">The following courses have overlapping times and cannot be scheduled together:</p>
+      <div id="clash-list"></div>
+      <div class="btn-row">
+        <button class="btn-outline" onclick="showWishlist()">← Back to Wishlist</button>
+        <a href="course_list.html" class="btn-outline">View All Courses</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMETABLE PREVIEW -->
+  <div id="view-preview" style="display:none">
+    <div class="preview-title" id="preview-title">Timetable Preview</div>
+    <div class="schedules-grid" id="schedules-grid"></div>
+  </div>
+</div>
+
+<footer>SmartTimetable UUM | Plan Smarter, Register Easier</footer>
+
+<script>
+// ── All course data (same as course_list.html) ──
+const ALL_COURSES = {
+  SCCVK1013:{name:'Programming Language and Authoring',credits:3,groups:[{label:'A',day:'ISNIN',start:'08:30',end:'10:30',venue:'BTA 16'},{label:'B',day:'SELASA',start:'10:30',end:'12:30',venue:'DKG 4/4'}]},
+  SCCVK2083:{name:'2D Animation',credits:3,groups:[{label:'A',day:'RABU',start:'08:30',end:'10:30',venue:'DKG 23/6'},{label:'B',day:'KHAMIS',start:'14:30',end:'16:30',venue:'BTA 5'}]},
+  SCCVK3033:{name:'Multimedia Database',credits:3,groups:[{label:'A',day:'ISNIN',start:'10:30',end:'12:30',venue:'DKG 18/2'},{label:'B',day:'RABU',start:'08:30',end:'10:30',venue:'BTA 5'}]},
+  SCCVK3053:{name:'Internet Technology Services',credits:3,groups:[{label:'A',day:'ISNIN',start:'12:30',end:'14:30',venue:'DKG 28/6'},{label:'B',day:'KHAMIS',start:'08:30',end:'10:30',venue:'BTA 3'}]},
+  SBLEK3033:{name:'Report Writing',credits:3,groups:[{label:'A',day:'AHAD',start:'09:30',end:'11:30',venue:'DKG 23/6'},{label:'B',day:'ISNIN',start:'14:30',end:'16:30',venue:'DKG 12/3'}]},
+  STDIK3033:{name:'IT Entrepreneurship',credits:4,groups:[{label:'A',day:'RABU',start:'10:30',end:'12:30',venue:'BTA 7'},{label:'B',day:'AHAD',start:'14:30',end:'16:30',venue:'DKG 28/6'}]},
+  MPB2013:{name:'English Language Enrichment I',credits:3,groups:[{label:'A',day:'ISNIN',start:'08:30',end:'10:30',venue:'BTA 18'},{label:'B',day:'SELASA',start:'10:30',end:'12:30',venue:'BTA 22'}]},
+  MPU1013:{name:'Penghayatan Etika dan Peradaban',credits:3,groups:[{label:'A',day:'RABU',start:'14:30',end:'16:30',venue:'DKG 7/1'}]},
+};
+
+const DAYS=['AHAD','ISNIN','SELASA','RABU','KHAMIS'];
+const TIMESLOTS=['08:30','09:30','10:30','11:30','12:30','13:30','14:30','15:30'];
+const COLORS=[{bg:'#EEEDFE',tx:'#3C3489'},{bg:'#E1F5EE',tx:'#085041'},{bg:'#FAECE7',tx:'#712B13'},{bg:'#FBEAF0',tx:'#72243E'},{bg:'#FAEEDA',tx:'#633806'}];
+const DAY_SHORT={AHAD:'Sun',ISNIN:'Mon',SELASA:'Tue',RABU:'Wed',KHAMIS:'Thu'};
+
+let wishlist=[], validSchedules=[];
+
+// Nav init
+(function(){
+  const name=localStorage.getItem('st_name')||'Student';
+  const fn=name.split(' ')[0];
+  document.getElementById('nav-avatar').textContent=fn[0].toUpperCase();
+  document.getElementById('nav-name').textContent=fn;
+  renderWishlist();
+})();
+
+function updateWlBadge(){
+  const b=document.getElementById('wl-count');
+  if(b){b.textContent=wishlist.length;b.style.display=wishlist.length>0?'inline':'none';}
+}
+
+function renderWishlist(){
+  wishlist=JSON.parse(localStorage.getItem('wishlist')||'[]');
+  updateWlBadge();
+  const wrap=document.getElementById('wl-content');
+  if(!wishlist.length){
+    wrap.innerHTML=`<div class="empty"><div class="empty-ico">📭</div>Your wishlist is empty.<br><a href="course_list.html" style="color:#1a2a4a;font-weight:700">Browse courses →</a></div>`;
+    return;
+  }
+  let total=0;
+  const rows=wishlist.map((code,i)=>{
+    const c=ALL_COURSES[code];
+    if(!c)return '';
+    total+=c.credits;
+    return `<tr>
+      <td>${i+1}</td><td><strong>${code}</strong></td>
+      <td>${c.name}</td>
+      <td style="text-align:center">${c.credits}</td>
+      <td style="text-align:center"><button class="btn-del" onclick="removeFromWishlist('${code}')" title="Remove">🗑</button></td>
+    </tr>`;
+  }).join('');
+  wrap.innerHTML=`
+    <table>
+      <thead><tr><th>No</th><th>Course Code</th><th>Course Name</th><th style="text-align:center">Credit Hours</th><th style="text-align:center">Action</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr class="total-row"><td colspan="3" style="text-align:right">Total Credit Hours</td><td style="text-align:center">${total}</td><td></td></tr></tfoot>
+    </table>
+    <button class="btn-generate" onclick="generate()">✨ GENERATE</button>`;
+}
+
+function removeFromWishlist(code){
+  wishlist=wishlist.filter(c=>c!==code);
+  localStorage.setItem('wishlist',JSON.stringify(wishlist));
+  renderWishlist();
+}
+
+function showWishlist(){
+  document.getElementById('view-wishlist').style.display='block';
+  document.getElementById('view-clash').style.display='none';
+  document.getElementById('view-preview').style.display='none';
+  renderWishlist();
+}
+
+// ── Schedule generation ──
+function toMin(t){const p=t.split(':');return+p[0]*60+(+p[1]||0);}
+function clash(s1,e1,s2,e2){return toMin(s1)<toMin(e2)&&toMin(s2)<toMin(e1);}
+
+function generate(){
+  wishlist=JSON.parse(localStorage.getItem('wishlist')||'[]');
+  const courses=wishlist.map(code=>({code,data:ALL_COURSES[code]})).filter(c=>c.data);
+  if(!courses.length)return;
+
+  // Hard clash detection
+  const clashes=[];
+  for(let i=0;i<courses.length;i++){
+    for(let j=i+1;j<courses.length;j++){
+      const a=courses[i],b=courses[j];
+      const allClash=a.data.groups.every(ga=>b.data.groups.every(gb=>
+        ga.day===gb.day&&clash(ga.start,ga.end,gb.start,gb.end)));
+      if(allClash){
+        const ga=a.data.groups[0],gb=b.data.groups[0];
+        clashes.push({a:a.code,b:b.code,day:ga.day,sa:ga.start,ea:ga.end,sb:gb.start,eb:gb.end});
+      }
+    }
+  }
+  if(clashes.length){showClashError(clashes);return;}
+
+  // Build combinations
+  validSchedules=[];
+  buildCombos(courses,0,[]);
+  if(!validSchedules.length){
+    showClashError([{noSolution:true}]);return;
+  }
+  showPreview();
+}
+
+function buildCombos(courses,idx,current){
+  if(validSchedules.length>=6)return;
+  if(idx===courses.length){validSchedules.push([...current]);return;}
+  const c=courses[idx];
+  for(const g of c.data.groups){
+    let ok=true;
+    for(const picked of current){
+      if(picked.day===g.day&&clash(picked.start,picked.end,g.start,g.end)){ok=false;break;}
+    }
+    if(ok){
+      current.push({...g,code:c.code,name:c.data.name,credits:c.data.credits});
+      buildCombos(courses,idx+1,current);
+      current.pop();
+    }
+  }
+}
+
+function showClashError(clashes){
+  document.getElementById('view-wishlist').style.display='none';
+  document.getElementById('view-preview').style.display='none';
+  document.getElementById('view-clash').style.display='block';
+  const list=document.getElementById('clash-list');
+  if(clashes[0]&&clashes[0].noSolution){
+    list.innerHTML='<div class="clash-item">✕ No valid schedule could be generated. All group combinations result in time conflicts.</div>';
+  } else {
+    list.innerHTML=clashes.map(c=>
+      `<div class="clash-item">✕ ${c.a} (${c.day} ${c.sa}–${c.ea}) clashes with ${c.b} (${c.day} ${c.sb}–${c.eb})</div>`
+    ).join('');
+  }
+}
+
+function showPreview(){
+  document.getElementById('view-wishlist').style.display='none';
+  document.getElementById('view-clash').style.display='none';
+  document.getElementById('view-preview').style.display='block';
+  document.getElementById('preview-title').textContent=`Timetable Preview — ${validSchedules.length} option${validSchedules.length!==1?'s':''} found`;
+
+  const colorMap={};
+  if(validSchedules[0]) validSchedules[0].forEach((s,i)=>{colorMap[s.code]=COLORS[i%COLORS.length];});
+
+  document.getElementById('schedules-grid').innerHTML=validSchedules.map((sch,idx)=>`
+    <div class="sch-card">
+      <div class="sch-label">Schedule ${idx+1}</div>
+      ${buildMiniTT(sch,colorMap)}
+      <button class="btn-select" onclick="selectSchedule(${idx})">Select</button>
+    </div>`).join('');
+}
+
+function buildMiniTT(sch,colorMap){
+  let html=`<table class="mini-tt"><thead><tr><th class="tc"></th>${DAYS.map(d=>`<th>${DAY_SHORT[d]}</th>`).join('')}</tr></thead><tbody>`;
+  for(let i=0;i<TIMESLOTS.length-1;i++){
+    const ts=TIMESLOTS[i];
+    html+=`<tr><td class="tc">${ts}</td>`;
+    for(const day of DAYS){
+      const s=sch.find(x=>x.day===day&&x.start===ts);
+      const col=s?colorMap[s.code]:null;
+      html+=s?`<td><div class="cell-inner" style="background:${col.bg};color:${col.tx}">${s.code.slice(-4)}<br>Grp ${s.label}</div></td>`:`<td></td>`;
+    }
+    html+=`</tr>`;
+  }
+  return html+`</tbody></table>`;
+}
+
+function selectSchedule(idx){
+  const sch=validSchedules[idx];
+  // Build selected map: {code: group_label}
+  const selected={};
+  sch.forEach(s=>{selected[s.code]=s.label;});
+  localStorage.setItem('final_schedule',JSON.stringify(selected));
+  localStorage.setItem('final_schedule_full',JSON.stringify(sch));
+  window.location.href='timetable.html';
+}
+</script>
+</body>
+</html>
